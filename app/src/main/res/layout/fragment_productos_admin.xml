@@ -9,53 +9,84 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F8FAFC"
         android:orientation="vertical">
 
-        <!-- Header corregido -->
-        <RelativeLayout
+        <!-- Header superior con menú y perfil -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="#1F2937"
-            android:paddingHorizontal="16dp">
+            android:layout_height="80dp"
+            android:background="#FFFFFF"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp">
 
             <ImageButton
                 android:id="@+id/btnBack"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@android:color/white"
-                android:padding="12dp" />
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                app:tint="#111827" />
 
             <TextView
-                android:id="@+id/tvTitulo"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
                 android:text="Gestión de productos"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
+                android:textColor="#111827"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btnHome"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_home"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@android:color/white"
-                android:padding="12dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:cardBackgroundColor="#EEF2FF"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="A"
+                        android:textColor="#4F46E5"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Admin"
+                        android:textColor="#111827"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/btnLogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Salir"
+                        android:textColor="#EF4444"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
-        </RelativeLayout>
-
-        <!-- Contenido scrollable -->
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:fillViewport="true">
 
             <LinearLayout
@@ -64,241 +95,110 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Botones de acción -->
+                <!-- Botones Superiores -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="end"
-                    android:layout_marginBottom="12dp">
-
+                    android:layout_marginBottom="16dp">
                     <Button
                         android:id="@+id/btnGestionExistencias"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Gestión existencias"
-                        android:textSize="11sp"
-                        android:textColor="@android:color/white"
-                        android:background="#374151"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:paddingHorizontal="12dp" />
-
+                        android:backgroundTint="#312E81"
+                        android:text="Gestión existencias"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF" />
                     <Button
                         android:id="@+id/btnNuevoProducto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="#FFFFFF"
                         android:text="+ Nuevo producto"
-                        android:textSize="11sp"
-                        android:textColor="@android:color/white"
-                        android:background="#000000"
-                        android:paddingHorizontal="12dp" />
+                        android:textAllCaps="false"
+                        android:textColor="#312E81"
+                        app:strokeColor="#312E81"
+                        app:strokeWidth="1dp" />
                 </LinearLayout>
 
-                <!-- Barra de búsqueda -->
-                <LinearLayout
+                <!-- Barra de búsqueda y filtros -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@android:color/white"
-                    android:padding="12dp"
-                    android:elevation="2dp">
-
-                    <EditText
-                        android:id="@+id/etBuscarProducto"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_search_field"
-                        android:hint="Buscar producto..."
-                        android:textSize="14sp"
-                        android:paddingHorizontal="16dp"
-                        android:layout_marginBottom="12dp" />
-
-                    <!-- Filtros en una fila -->
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <Spinner
-                            android:id="@+id/spinnerCategorias"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp" />
-
-                        <Spinner
-                            android:id="@+id/spinnerOrdenar"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1" />
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <EditText
+                            android:id="@+id/etBuscarProducto"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_search_field"
+                            android:hint="Buscar producto..."
+                            android:paddingHorizontal="16dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+                            <Spinner
+                                android:id="@+id/spinnerCategorias"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp" />
+                            <Spinner
+                                android:id="@+id/spinnerOrdenar"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-                <!-- Tabla de productos - Header -->
-                <LinearLayout
+                <!-- Tabla de Productos -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="#F3F4F6"
-                    android:padding="12dp"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.2"
-                        android:text="CATEGORÍA"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="#6B7280" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="NOMBRE"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="#6B7280" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.5"
-                        android:text="VARIAC."
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="#6B7280" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:text="STOCK"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="#6B7280"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="PRECIO"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="#6B7280"
-                        android:gravity="end" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:text="ACCIÓN"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:textColor="#6B7280"
-                        android:gravity="center" />
-                </LinearLayout>
-
-                <!-- Tabla de productos - Contenido -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewProductos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="200dp"
-                    android:background="@android:color/white"
-                    android:elevation="2dp" />
-
-                <!-- Estado vacío -->
-                <LinearLayout
-                    android:id="@+id/layoutEmpty"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@android:drawable/ic_menu_search"
-                        android:tint="#9CA3AF"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="No se encontraron productos"
-                        android:textSize="14sp"
-                        android:textColor="#9CA3AF" />
-                </LinearLayout>
-
-                <!-- Loading -->
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="20dp"
-                    android:visibility="gone" />
-
-                <!-- Paginación -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="16dp">
-
-                    <TextView
-                        android:id="@+id/tvInfoPaginacion"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Mostrando 1-10 de 100 productos"
-                        android:textSize="12sp"
-                        android:textColor="#6B7280" />
-
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
+                        
+                        <!-- Header Tabla -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#F9FAFB"
+                            android:padding="12dp"
+                            android:orientation="horizontal">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.5" android:text="Producto" android:textSize="11sp" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.7" android:text="Stock" android:textSize="11sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Costo" android:textSize="11sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Precio" android:textSize="11sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Ganancia" android:textSize="11sp" android:textStyle="bold" android:gravity="center" />
+                        </LinearLayout>
 
-                        <ImageButton
-                            android:id="@+id/btnAnterior"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@android:drawable/ic_media_previous"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:tint="#374151"
-                            android:layout_marginEnd="4dp" />
-
-                        <TextView
-                            android:id="@+id/tvPaginaActual"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:background="#1F2937"
-                            android:text="1"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@android:color/white"
-                            android:gravity="center" />
-
-                        <ImageButton
-                            android:id="@+id/btnSiguiente"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@android:drawable/ic_media_next"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:tint="#374151"
-                            android:layout_marginStart="4dp" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerViewProductos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="400dp" />
                     </LinearLayout>
-                </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-
+        </ScrollView>
     </LinearLayout>
 
 </FrameLayout>

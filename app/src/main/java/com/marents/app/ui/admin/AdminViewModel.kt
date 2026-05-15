@@ -5,6 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.marents.app.RetrofitClient
+import com.marents.app.AdminStatsResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlinx.coroutines.launch
 
 data class AdminStats(
@@ -49,33 +53,51 @@ class AdminViewModel : ViewModel() {
             _error.value = null
 
             try {
-                // Simular datos mientras creamos los endpoints reales
-                // TODO: Reemplazar con llamadas reales a la API
-                val statsMock = AdminStats(
-                    pedidosPendientes = 12,
-                    pedidosCompletados = 58,
-                    totalVentas = 2500000,
-                    stockBajo = 5
-                )
+                // Llamada real a la API para obtener estadísticas usando enqueue para evitar bloqueos
+                RetrofitClient.apiService.getAdminStats().enqueue(object : retrofit2.Callback<AdminStatsResponse> {
+                    override fun onResponse(
+                        call: retrofit2.Call<AdminStatsResponse>,
+                        response: retrofit2.Response<AdminStatsResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            val statsResponse = response.body()
+                            if (statsResponse != null) {
+                                _stats.postValue(AdminStats(
+                                    pedidosPendientes = statsResponse.pendientes,
+                                    pedidosCompletados = statsResponse.completados,
+                                    totalVentas = statsResponse.ventas,
+                                    stockBajo = statsResponse.stock_bajo
+                                ))
 
-                val productosMock = listOf(
-                    ProductoVendido("Cool", 25),
-                    ProductoVendido("Bolichero", 18),
-                    ProductoVendido("Bigotes", 12)
-                )
+                                // Mapear los pedidos reales de la respuesta
+                                val pedidosReales = statsResponse.pedidos_recientes?.map { 
+                                    PedidoReciente(
+                                        id = "#${it.id}",
+                                        cliente = it.cliente,
+                                        total = "$${java.text.NumberFormat.getInstance(java.util.Locale("es", "CO")).format(it.total)}",
+                                        estado = it.estado
+                                    )
+                                } ?: emptyList()
+                                _pedidosRecientes.postValue(pedidosReales)
+                            }
+                        } else {
+                            _error.postValue("Error del servidor: ${response.code()}")
+                        }
+                        _isLoading.postValue(false)
+                    }
 
-                val pedidosMock = listOf(
-                    PedidoReciente("#001", "Juan", "$120.000", "Pendiente"),
-                    PedidoReciente("#002", "Ana", "$85.000", "Completado")
-                )
+                    override fun onFailure(call: Call<AdminStatsResponse>, t: Throwable) {
+                        _error.postValue("Error de conexión: ${t.message}")
+                        _isLoading.postValue(false)
+                    }
+                })
 
-                _stats.value = statsMock
-                _productosVendidos.value = productosMock
-                _pedidosRecientes.value = pedidosMock
+                // El resto sigue igual (productos vendidos mock por ahora)
+                val productosMock = emptyList<ProductoVendido>()
+                _productosVendidos.postValue(productosMock)
 
             } catch (e: Exception) {
-                _error.value = "Error al cargar estadísticas: ${e.message}"
-            } finally {
+                _error.postValue("Excepción: ${e.message}")
                 _isLoading.value = false
             }
         }

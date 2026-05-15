@@ -1,6 +1,7 @@
 package com.marents.app.ui.admin
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,8 +77,8 @@ class   UsersFragment : Fragment() {
             }
 
             // Botón agregar usuario
-            binding.btnAddUser.setOnClickListener {
-                Toast.makeText(requireContext(), "Agregar nuevo usuario - Próximamente", Toast.LENGTH_SHORT).show()
+            binding.fabAddUser.setOnClickListener {
+                mostrarDialogoCrearUsuario()
             }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error en botones: ${e.message}", Toast.LENGTH_LONG).show()
@@ -89,33 +90,36 @@ class   UsersFragment : Fragment() {
             viewModel.users.observe(viewLifecycleOwner) { users ->
                 users?.let {
                     usersAdapter.updateUsers(it)
-                    updateEmptyState(it.isEmpty())
                 }
             }
 
             viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
                 binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-                binding.recyclerViewUsers.visibility = if (isLoading) View.GONE else View.VISIBLE
             }
 
             viewModel.error.observe(viewLifecycleOwner) { error ->
-                error?.let {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                if (error != null && isAdded) {
+                    // Si hay error, mostrar un aviso pero no bloquear la pantalla
+                    Log.e("UsersFragment", "Error de servidor: $error")
                     viewModel.limpiarError()
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Error en observadores: ${e.message}", Toast.LENGTH_LONG).show()
+            Log.e("UsersFragment", "Error en observadores: ${e.message}")
         }
     }
 
     private fun updateEmptyState(isEmpty: Boolean) {
         try {
-            binding.layoutEmpty.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.tvNoUsers.visibility = if (isEmpty) View.VISIBLE else View.GONE
             binding.recyclerViewUsers.visibility = if (isEmpty) View.GONE else View.VISIBLE
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Error en estado vacío: ${e.message}", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun mostrarDialogoCrearUsuario() {
+        Toast.makeText(requireContext(), "Función para crear usuario", Toast.LENGTH_SHORT).show()
     }
 
     private fun showDeleteConfirmation(user: User) {

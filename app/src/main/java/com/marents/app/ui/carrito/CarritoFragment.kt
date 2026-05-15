@@ -61,8 +61,15 @@ class CarritoFragment : Fragment() {
     }
 
     private fun cargarCarrito() {
-        // TODO: Obtener el userId real del usuario logueado. Por ahora usamos 1 para pruebas.
-        val userId = 1
+        // Obtener el userId real desde SharedPreferences (donde se guarda al hacer login)
+        val prefs = requireActivity().getSharedPreferences("marents_prefs", android.content.Context.MODE_PRIVATE)
+        val userId = prefs.getInt("user_id", -1)
+
+        if (userId == -1) {
+            binding.tvCarritoVacio.text = "Inicia sesión para ver tu carrito"
+            binding.tvCarritoVacio.visibility = View.VISIBLE
+            return
+        }
 
         Log.d("CarritoFragment", "Cargando carrito para usuario $userId")
         binding.tvCarritoVacio.text = "Cargando carrito..."
@@ -111,22 +118,27 @@ class CarritoFragment : Fragment() {
             binding.tvCarritoVacio.visibility = View.GONE
             binding.recyclerViewCarrito.visibility = View.VISIBLE
             
-            // Actualizar el RecyclerView con los items
             carritoAdapter.submitList(items)
             
             var total = 0
             var cantidadTotal = 0
             
             for (item in items) {
-                cantidadTotal += item.cantidad
-                // Limpiar el string de precio si tiene simbolos
-                val precioLimpio = item.precio.replace("$", "").replace(".", "").replace(",", "").trim()
-                total += (precioLimpio.toIntOrNull() ?: 0) * item.cantidad
+                try {
+                    cantidadTotal += item.cantidad
+                    val precioLimpio = item.precio.replace(Regex("[^0-9.]"), "")
+                    val precioNumerico = precioLimpio.toDoubleOrNull() ?: 0.0
+                    total += (precioNumerico.toInt() * item.cantidad)
+                } catch (e: Exception) {
+                    Log.e("CarritoFragment", "Error procesando item: ${e.message}")
+                }
             }
             
-            binding.tvCantidadProductos.text = "$cantidadTotal productos"
-            binding.tvSubtotal.text = "$${formatPrecio(total)}"
-            binding.tvTotal.text = "$${formatPrecio(total)}"
+            val productosTexto = if (cantidadTotal == 1) "1 producto" else "$cantidadTotal productos"
+            binding.tvCantidadProductos.text = productosTexto
+            val precioFormateado = "$${formatPrecio(total)}"
+            binding.tvSubtotal.text = precioFormateado
+            binding.tvTotal.text = precioFormateado
         }
     }
 
@@ -151,7 +163,7 @@ class CarritoFragment : Fragment() {
     }
 
     private fun formatPrecio(precio: Int): String {
-        return String.format("%,d", precio).replace(',', '.')
+        return java.text.NumberFormat.getInstance(java.util.Locale("es", "CO")).format(precio)
     }
 
     override fun onDestroyView() {

@@ -157,6 +157,13 @@ class RegisterFragment : Fragment() {
                     viewModel.registerSuccess.collect { success ->
                         if (!isAdded) return@collect
                         if (success) {
+                            // GUARDAR ID DE USUARIO RECIÉN REGISTRADO
+                            val user = viewModel.user.value
+                            user?.id?.let { id ->
+                                val prefs = requireActivity().getSharedPreferences("marents_prefs", android.content.Context.MODE_PRIVATE)
+                                prefs.edit().putInt("user_id", id).apply()
+                            }
+
                             Toast.makeText(requireContext(), "Registro exitoso", Toast.LENGTH_SHORT).show()
                             // Navega a selección de categorías antes del Home
                             (activity as? Navigator.Provider)?.getNavigator()?.navigateToCategories()

@@ -67,4 +67,22 @@ interface ApiService {
 
     @DELETE("cart/item/{itemId}")
     fun removeFromCart(@Path("itemId") itemId: Int): Call<CartResponse>
+
+    @GET("admin/stats")
+    fun getAdminStats(): Call<AdminStatsResponse>
 }
+
+data class AdminStatsResponse(
+    val pendientes: Int,
+    val ventas: Int,
+    val stock_bajo: Int,
+    val completados: Int,
+    val pedidos_recientes: List<PedidoResumenResponse>? = null
+)
+
+data class PedidoResumenResponse(
+    val id: Int,
+    val cliente: String,
+    val total: Double,
+    val estado: String
+)

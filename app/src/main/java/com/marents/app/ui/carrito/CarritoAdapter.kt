@@ -35,19 +35,20 @@ class CarritoAdapter(
         private val btnEliminar: ImageView = itemView.findViewById(R.id.btnEliminar)
 
         fun bind(item: CartItem) {
-            tvNombreProducto.text = item.nombre
-            tvTalla.text = "Talla: ${item.talla}"
+            tvNombreProducto.text = item.nombre ?: "Producto"
+            tvTalla.text = "Talla: ${item.talla ?: "N/A"}"
             tvCantidad.text = "Cantidad: ${item.cantidad}"
             
-            // Formatear precio
-            val precioFormateado = if (item.precio.startsWith("$")) {
-                item.precio
+            // Formatear precio de forma segura
+            val precioStr = item.precio ?: "0"
+            val precioFormateado = if (precioStr.startsWith("$")) {
+                precioStr
             } else {
-                "$${item.precio}"
+                "$${precioStr}"
             }
             tvPrecio.text = precioFormateado
 
-            // Cargar imagen (placeholder por ahora)
+            // Cargar imagen con placeholder para evitar cierres
             ivProducto.setImageResource(R.drawable.ic_shoe_placeholder)
 
             // Configurar click en eliminar

@@ -75,10 +75,17 @@ class LoginFragment : Fragment() {
                     viewModel.loginSuccess.collect { success ->
                         if (!isAdded) return@collect
                         if (success) {
+                            val user = viewModel.user.value
+                            
+                            // GUARDAR ID DE USUARIO EN PREFERENCIAS
+                            user?.id?.let { id ->
+                                val prefs = requireActivity().getSharedPreferences("marents_prefs", android.content.Context.MODE_PRIVATE)
+                                prefs.edit().putInt("user_id", id).apply()
+                            }
+
                             Toast.makeText(requireContext(), "Login exitoso", Toast.LENGTH_SHORT).show()
 
                             // Verificar el rol del usuario y redirigir accordingly
-                            val user = viewModel.user.value
                             if (user?.rol == "admin") {
                                 (activity as? MainActivity)?.navigateToFragment(AppRoutes.ADMIN)
                             } else {
